@@ -5,7 +5,7 @@ from PyInstaller.utils.hooks import collect_all
 
 a = Analysis(
     ['DiskWriter-Pro.py'],
-    pathex=['.'],  # Adjust if needed to include the directory where the script is located
+    pathex=['.'],
     binaries=[],
     datas=[
         ('res/images/favicon.png', 'res/images'),
@@ -41,5 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='res/icons/favicon.ico',  # Correct path to your icon
+    icon='res/icons/favicon.ico',
 )
