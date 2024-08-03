@@ -26,7 +26,10 @@ or
 
 2. **Generate the executable or run it directly**
 
-- Run "python -m PyInstaller DiskWriter-Pro.spec" from /src to generate yourself an executable
+- Run this from /src to generate yourself an executable
+    ```bash
+    python -m PyInstaller DiskWriter-Pro.spec 
+    ```
 or
 - Run the DiskWriter-Pro.py using python
 
