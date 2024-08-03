@@ -72,9 +72,15 @@ def open_donations_page(event):
 root = tk.Tk()
 root.title("DiskWriter Pro")
 root.geometry("720x480") # Set the initial size of the window
-icon_path = "./res/images/favicon.png" # Load and set the window icon
+
+# Determine the script directory
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Load and set the window icon
+icon_path = os.path.join(script_dir, "res/images/favicon.png")
 icon = tk.PhotoImage(file=icon_path)
 root.iconphoto(True, icon)
+
 root.configure(bg='#222') # Apply dark theme
 
 btn_select_directory = tk.Button( # Create and pack a button to select a directory
@@ -101,9 +107,10 @@ btn_select_directory.bind("<Leave>", on_leave)
 
 btn_select_directory.pack(pady=20)
 
-gif_path = "./res/gifs/yo.gif" # Load the GIF and create a label for it
-gif_image = Image.open(gif_path)
+# Load the GIF and create a label for it
 gif_frames = []
+gif_path = os.path.join(script_dir, "res/gifs/yo.gif")
+gif_image = Image.open(gif_path)
 try:
     while True:
         resized_frame = gif_image.copy().resize((200, 200), Image.LANCZOS) # Resize frame
@@ -128,6 +135,15 @@ lbl_gif.config(width=200, height=200) # Set size for GIF label
 
 lbl_gif.pack_forget() # Initially hide the GIF
 
+lbl_version = tk.Label( # Add version label
+    root,
+    text="v1.0.0",
+    fg="#999",  # Light gray color for version text
+    bg="#222",
+    font=("Helvetica", 10)
+)
+lbl_version.pack(side=tk.BOTTOM, anchor=tk.SE, padx=10, pady=(10, 5))  # Pady to space it from the donations label
+
 lbl_donations = tk.Label( # Add "Donations" hyperlink label
     root,
     text="Donations",
@@ -136,7 +152,7 @@ lbl_donations = tk.Label( # Add "Donations" hyperlink label
     cursor="hand2",
     font=("Helvetica", 10)
 )
-lbl_donations.pack(side=tk.BOTTOM, anchor=tk.SE, padx=10, pady=10)
+lbl_donations.pack(side=tk.BOTTOM, anchor=tk.SE, padx=10, pady=(0, 10))
 
 lbl_donations.bind("<Button-1>", open_donations_page) # Bind click event to open the donations page
 
