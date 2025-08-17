@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.ttk as ttk
 from tkinter import filedialog, messagebox
 import os
 import psutil
@@ -11,29 +12,40 @@ def get_available_space(directory):
     disk_usage = psutil.disk_usage(directory)
     return disk_usage.free
 
+def update_progress(value):
+    progress["value"] = value
+    root.update_idletasks()
+
 def create_large_files(directory, file_size_bytes, btn):
     """Creates large files with zeros to fill the entire available space."""
     try:
         large_file_size = 1024 * 1024 * 10  # 10 MB large file size
         num_files = file_size_bytes // large_file_size
         remainder = file_size_bytes % large_file_size
+
+        total_steps = num_files + (1 if remainder > 0 else 0)
+        root.after(0, lambda: progress.config(maximum=total_steps))
+        root.after(0, update_progress, 0)
         
         for i in range(num_files):
             file_path = os.path.join(directory, f'filler_{i}.bin')
             with open(file_path, 'wb') as file:
                 file.write(b'\x00' * large_file_size)
+            root.after(0, update_progress, i + 1)
         
         if remainder > 0: # Adjust the last file to exactly fill the remaining space
             file_path = os.path.join(directory, f'filler_{num_files}.bin')
             with open(file_path, 'wb') as file:
                 file.write(b'\x00' * remainder)
+            root.after(0, update_progress, total_steps)
         
         messagebox.showinfo("Success", "Successfully filled the available space.")
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
     finally: # Hide the GIF and re-enable the button after the process is completed
-        lbl_gif.pack_forget()
-        btn.config(state=tk.NORMAL)
+        root.after(0, lbl_gif.pack_forget)
+        root.after(0, btn.config, {"state": tk.NORMAL})
+        root.after(0, update_progress, 0)
 
 def fill_all_available_space(directory, btn):
     """Fill the entire available space on the selected drive with large files of zeros."""
@@ -64,10 +76,6 @@ def on_leave(e):
     """Revert button appearance when not hovering."""
     btn_select_directory.config(bg='#4CAF50')  # Original color
 
-def open_donations_page(event):
-    """Open the donations page in the web browser."""
-    webbrowser.open("https://pabloramos.net/pages/donations.html")
-
 # Set up the Tkinter GUI
 root = tk.Tk()
 root.title("DiskWriter Pro")
@@ -86,10 +94,10 @@ root.configure(bg='#222') # Apply dark theme
 btn_select_directory = tk.Button( # Create and pack a button to select a directory
     root, 
     text="Select Directory to Fill", 
-    font=("Helvetica", 12), 
+    font=("Helvetica", 12, "bold"), 
     command=select_directory, 
     bg='#4CAF50', 
-    fg='#fff', 
+    fg="#ffffff", 
     activebackground='#2d6b2f', 
     activeforeground='#fff', 
     bd=0, 
@@ -100,6 +108,10 @@ btn_select_directory = tk.Button( # Create and pack a button to select a directo
     highlightbackground='#2d6b2f',
     highlightcolor='#4CAF50'
 )
+
+# Create a progress bar
+progress = ttk.Progressbar(root, orient="horizontal", length=400, mode="determinate")
+progress.pack(pady=10)
 
 # Bind hover effects
 btn_select_directory.bind("<Enter>", on_enter)
@@ -137,12 +149,22 @@ lbl_gif.pack_forget() # Initially hide the GIF
 
 lbl_version = tk.Label( # Add version label
     root,
-    text="v1.0.0",
+    text="v1.1.0",
     fg="#999",  # Light gray color for version text
     bg="#222",
-    font=("Helvetica", 10)
+    cursor="hand2",
+    font=("Helvetica", 10, "bold")
 )
-lbl_version.pack(side=tk.BOTTOM, anchor=tk.SE, padx=10, pady=(10, 5))  # Pady to space it from the donations label
+lbl_version.pack(side=tk.BOTTOM, anchor=tk.SE, padx=10, pady=(0, 5))  # Pady to space it from the donations label
+def open_project_page(event):
+    webbrowser.open("https://github.com/pablorlrl/DiskWriter-Pro")
+def version_on_enter(e):
+    lbl_version.config(fg="#FFFFFF")  # when hovered
+def version_on_leave(e):
+    lbl_version.config(fg="#999")  # back to original
+lbl_version.bind("<Enter>", version_on_enter)
+lbl_version.bind("<Leave>", version_on_leave)
+lbl_version.bind("<Button-1>", open_project_page) # Bind click event to open the project page
 
 lbl_donations = tk.Label( # Add "Donations" hyperlink label
     root,
@@ -150,10 +172,19 @@ lbl_donations = tk.Label( # Add "Donations" hyperlink label
     fg="#1E90FF",
     bg="#222",
     cursor="hand2",
-    font=("Helvetica", 10)
+    font=("Helvetica", 10, "bold")
 )
 lbl_donations.pack(side=tk.BOTTOM, anchor=tk.SE, padx=10, pady=(0, 10))
 
+# Donations label effects
+def open_donations_page(event):
+    webbrowser.open("https://buy.stripe.com/cN217j4hx1bffN64gg")
+def donations_on_enter(e):
+    lbl_donations.config(fg="#83D7FF")  # when hovered
+def donations_on_leave(e):
+    lbl_donations.config(fg="#1E90FF")  # back to original
+lbl_donations.bind("<Enter>", donations_on_enter)
+lbl_donations.bind("<Leave>", donations_on_leave)
 lbl_donations.bind("<Button-1>", open_donations_page) # Bind click event to open the donations page
 
 root.mainloop() # Run the GUI event loop
