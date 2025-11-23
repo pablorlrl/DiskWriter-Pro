@@ -8,6 +8,16 @@ DiskWriter Pro is a tool designed to fill available disk space with binary files
 - **Progress Feedback**: Visual indicators and messages inform you of the progress and success or failure of the operation.
 
 ## Use Cases
+# DiskWriter-Pro
+
+DiskWriter Pro is a tool designed to fill available disk space with binary files. It can be useful for securely wiping data or testing disk capacity. The application features a simple graphical user interface (GUI) for selecting a directory and managing the file creation process.
+
+## Features
+
+- **Simple GUI**: Easily select a directory to fill with files.
+- **Progress Feedback**: Visual indicators and messages inform you of the progress and success or failure of the operation.
+
+## Use Cases
 
 - **Determine Drive Capacity**: With this tool you can actually test the real capacity of your drives.
 - **Overwrite any past Data**: You can ensure a clean wipe of any disk by emptying it and running this solution to fill it until no space is left.
@@ -16,27 +26,36 @@ DiskWriter Pro is a tool designed to fill available disk space with binary files
 
 ### Installation
 
-1. **Download the latest Release**
-or
 1. **Clone the Repository**
 
    ```bash
    git clone <repository-url>
-   cd DiskWriter-Pro/src
+   cd DiskWriter-Pro
+   ```
 
-2. **Generate the executable or run it directly**
+2. **Install Dependencies**
 
-- Run this from /src to generate yourself an executable
-    ```bash
-    python -m PyInstaller DiskWriter-Pro.spec 
-    ```
-or
-- Run the DiskWriter-Pro.py using python
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-#### Prerequisites (If you want to generate the executable yourself)
+3. **Run the Application**
+
+   You can run the script directly:
+   ```bash
+   python src/DiskWriter-Pro.py
+   ```
+
+   Or generate an executable:
+   ```bash
+   cd src
+   python -m PyInstaller DiskWriter-Pro.spec
+   ```
+
+#### Prerequisites
 
 - Python 3.12 or higher
-- Required Python packages
+
 
 ### Usage
 
